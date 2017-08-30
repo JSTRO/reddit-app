@@ -1,0 +1,42 @@
+.App {
+  text-align: center;
+  margin: 40px 150px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+.Post {
+  text-align: left;
+}
+
+.score {
+  font-weight: bold;
+}
+
+a {
+  text-decoration: none;
+
+}
+
+.button, .score {
+  display: inline;
+  margin: 5px;
+}
+
+.commentButton {
+  display: inline;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
