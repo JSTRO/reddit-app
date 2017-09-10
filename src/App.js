@@ -26,7 +26,6 @@ class App extends Component {
   }
 
   fetchPostsForSubreddit () {
-    isLoading: true
     const { subreddit } = this.state;
 
     fetch('https://www.reddit.com/r/' + subreddit + '.json')
@@ -35,6 +34,7 @@ class App extends Component {
       )
       .then((data) =>
         this.setState({
+          isLoading: false,
           error: false,
           posts: data.data.children
         })
@@ -58,8 +58,8 @@ class App extends Component {
         </form> 
         {this.state.error ? <p>Thats not a valid subreddit g</p> : null} 
         {this.state.posts.map((child) => {
-          const { title, url } = child.data 
-          return <Post key={child.data.id} post={child.data}/>
+          const { id } = child.data 
+          return <Post className="row" key={id} post={child.data}/>
         })}
       </div>
     );
@@ -92,19 +92,15 @@ class Post extends Component {
     const { expanded } = this.state;
     const { comments } = this.state;
     return (
-      <div className="Post">
+      <div className="col-md-3" id="Post">
         <p><p className="score"> {post.score}</p><a href={post.url} target="_blank">{post.title}</a> 
           <button onClick={this.handleClick} className="button"> {expanded ? "Minimize-" : "Expand+"}</button>
           <button onClick={this.openComments} className="commentButton"> Comments </button>
           {comments ? <CommentList key={post.permalink} permalink={post.permalink}/> : null}
         </p>
-        
         {expanded ? 
         <div> 
-          <p>
-          {post.selftext} <img src={post.url} alt={post.url}/> 
-          </p>
-            
+          <p>{post.selftext} <img src={post.url} alt={post.url}/> </p> 
         </div> : null}
       </div>
     )
@@ -115,6 +111,7 @@ class CommentList extends Component {
   constructor () {
     super()
     this.state = {
+      isLoading: true,
       error: null,
       comments: []
     };
@@ -125,7 +122,9 @@ class CommentList extends Component {
   }
 
   fetchCommentsForPost() {
-    isLoading: true
+    this.state = {
+      isLoading: true
+    }
 
     fetch('https://www.reddit.com' + this.props.permalink + '.json')
       .then((response) =>
@@ -133,7 +132,8 @@ class CommentList extends Component {
       )
       .then((data) =>
         this.setState({
-          error: false,
+          isLoading: false,
+          error: null,
           comments: data[1].data.children
         })
       )
@@ -147,8 +147,8 @@ class CommentList extends Component {
       console.log(val)  
       return <ul><li>{val.data.body}</li></ul>;
     })
+    return ( 
 
-    return (
       <div>{rootComment}</div>
     )
   }
