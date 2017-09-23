@@ -49,6 +49,7 @@ class App extends Component {
 
   render() {
     const { subreddit } = this.state;
+
     return (
       <div className="App">
         <h2>Reddit App</h2>
@@ -57,10 +58,15 @@ class App extends Component {
           <input type="text" value={subreddit} onChange={this.handleChange}></input>
         </form> 
         {this.state.error ? <p>Thats not a valid subreddit g</p> : null} 
-        {this.state.posts.map((child) => {
-          const { id } = child.data 
-          return <Post className="row" key={id} post={child.data}/>
-        })}
+        <div className="row">
+          <div className="col-md-12">
+            {this.state.posts.map((child) => {
+              const { id } = child.data 
+              return <Post key={id} post={child.data}/>
+            })}
+          </div>
+        </div>
+             
       </div>
     );
   }
@@ -70,17 +76,18 @@ class Post extends Component {
   constructor () {
     super()
     this.state = {
-      expanded: false
+      clicked: false
     };
 
-    this.handleClick = this.handleClick.bind(this);
+  // this.handleClick = this.handleClick.bind(this);
     this.openComments = this.openComments.bind(this);
   }
 
-  handleClick(event) {
-    const { expanded } = this.state;
-    expanded ? this.setState({expanded: false}) : this.setState({expanded: true})
-  }
+  // handleClick(event) {
+  //   const { clicked } = this.state;
+  //   this.setState({clicked: true});
+  //   clicked ? this.setState({clicked: false}) : null
+  // }
 
   openComments(event) {
     const { comments } = this.state
@@ -89,23 +96,39 @@ class Post extends Component {
   
   render() {
     const { post } = this.props;
+    console.log(post)
+    
     const { expanded } = this.state;
     const { comments } = this.state;
     return (
-      <div className="col-md-3" id="Post">
-        <p><p className="score"> {post.score}</p><a href={post.url} target="_blank">{post.title}</a> 
-          <button onClick={this.handleClick} className="button"> {expanded ? "Minimize-" : "Expand+"}</button>
-          <button onClick={this.openComments} className="commentButton"> Comments </button>
+      <div className="panel panel-default">
+        <div className="panel-body" id="Post" onClick={this.handleClick}>
+          <p className="score"> {post.score} </p>
+          <a href={post.url} target="_blank">{post.title}</a>  
+          <p>
+            <h5 className="domain">({post.domain})</h5>
+            <button onClick={this.openComments} className="btn btn-xs btn-primary" id="commentButton"> Comments </button>
+          </p>
+          {/*<button onClick={this.handleClick} className="btn btn-xs btn-primary" id="button"> {expanded ? "Minimize-" : "Expand+"}</button>*/}
           {comments ? <CommentList key={post.permalink} permalink={post.permalink}/> : null}
-        </p>
-        {expanded ? 
-        <div> 
-          <p>{post.selftext} <img src={post.url} alt={post.url}/> </p> 
-        </div> : null}
-      </div>
+          {expanded ? <p>{post.selftext} <img src={post.url} alt={post.url}/> </p> : null}
+        </div>
+      </div>  
     )
   }
 }
+
+// class Embed extends Component {
+
+//   render () {
+
+//     return (
+//       <div className="col-md-6">
+//          <p>Hello</p>
+//       </div> 
+//     )
+//   }
+// }
 
 class CommentList extends Component {
   constructor () {
@@ -141,12 +164,16 @@ class CommentList extends Component {
 
   render() {
 
-    const { comments } = this.state;
+    const { comments, isLoading } = this.state;
 
     const rootComment = comments.map((val) => {
       console.log(val)  
-      return <ul><li>{val.data.body}</li></ul>;
+      return <ul><li>» {val.data.body}</li></ul>;
     })
+    if (isLoading) {
+      return <p> Loading... </p>
+    }
+
     return ( 
 
       <div>{rootComment}</div>
