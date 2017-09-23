@@ -55,7 +55,14 @@ class App extends Component {
         <h2>Reddit App</h2>
         <p>r/{subreddit}</p>
         <form onSubmit={this.handleSubmit}>
-          <input type="text" value={subreddit} onChange={this.handleChange}></input>
+          <div className="form-group">
+            <input 
+              type="text" 
+              className="form-control" 
+              value={subreddit} placeholder="Type subreddit here..." 
+              onChange={this.handleChange}>
+            </input>
+          </div>  
         </form> 
         {this.state.error ? <p>Thats not a valid subreddit g</p> : null} 
         <div className="row">

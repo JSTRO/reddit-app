@@ -24,6 +24,11 @@
   float: none;
 }
 
+.form-control {
+  width: 20%;
+  margin: 0 auto;
+}
+
 form {
   margin-bottom: 40px;
 }
